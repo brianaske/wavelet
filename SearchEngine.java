@@ -1,35 +1,35 @@
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
+
 
 class Handler implements URLHandler {
-    // The one bit of state on the server: a number that will be manipulated by
-    // various requests.
+    // Create a string list for incoming strings
     String[] stringList = new String[100];
-    //Lister lister = new Lister();
+    //the index of a string
     int num = 0;
+    // Initiate a string for concatenation
     String connectedString = "";
 
+    // Concatenate strings
     String connectString(String string){
-            connectedString = connectedString + string + " ";
+            connectedString = connectedString + string + String.format("\n");
         return connectedString;
     }
 
+    //To pocess the incoming strings
     public String handleRequest(URI url) {
         if (url.getPath().equals("/")) {
-            return String.format("The strings are %s", connectedString);
-        } else if (url.getPath().equals("/increment")) {
-            num += 1;
-            return String.format("Number incremented!");
-        } else {
+            return String.format("The strings are %n %s", connectedString);
+        }
+        else {
             System.out.println("Path: " + url.getPath());
             if (url.getPath().contains("/add")) {
                 String[] parameters = url.getQuery().split("=");
                 if (parameters[0].equals("s")) {
                     connectedString = connectString(parameters[1]);
                     num++;
-                    return String.format("The strings are: %s ", connectedString);
+                    return String.format("The strings are: %n%s", connectedString);
                 }
             }
             return "404 Not Found!";
@@ -38,6 +38,7 @@ class Handler implements URLHandler {
     }
 }
 
+// Run the web server
 class SearchEngine {
     public static void main(String[] args) throws IOException {
         if(args.length == 0){
